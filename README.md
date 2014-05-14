@@ -2,6 +2,7 @@
 
 A circuit optimization toolbox for MATLAB based on SPICE simulations
 
+
 ## Legal Note
 
 CircuitOptim is free software: you can redistribute it and/or modify it under
