@@ -1,4 +1,4 @@
-Sample Optimization of RLC circuit
+Sample circuit of series RLC
 vs  vs  gnd ac  1
 r1  out gnd 1k
 l1  a   out 162u
