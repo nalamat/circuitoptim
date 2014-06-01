@@ -21,6 +21,6 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function circuitoptim()
+function circuitoptim(netlist, cost)
 	
 end
