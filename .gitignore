@@ -1,1 +1,6 @@
 *.asv
+*.ac*
+*.ic*
+*.lis
+*.st*
+MIL.log
