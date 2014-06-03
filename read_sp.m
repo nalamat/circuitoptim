@@ -42,16 +42,19 @@ function [ content params options ] = read_sp( netlist_path )
 			lower = val2double(option{1});
 			upper = val2double(option{2});
 			if (isempty(lower) || isempty(upper)); continue; end
-			scale = 'dec';
-			if (length(option) > 2 && strcmp(lower(option{3}), 'lin'))
-				scale = 'lin';
-			end
+			if (length(option) > 2); option{3} = ''; end
+			scale = lower(option{3});
+			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
 			
 			params  = horzcat(params, val2double(line_params{i}));
 			options = horzcat(options, struct('lower',lower, 'upper',upper, 'scale',scale));
 		end
 		
-		content = horzcat(content, '\r\n', line);
+		if (isempty(content))
+			content = line;
+		else
+			content = horzcat(content, '\r\n', line);
+		end
 	end
 	
 	fclose(f);
