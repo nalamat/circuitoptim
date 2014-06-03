@@ -37,7 +37,7 @@ function [ content params options ] = read_sp( netlist_path )
 		c = min(length(line_params), length(line_options));
 		
 		for i=1:c
-			option = regexp(line_options{i}, '[-+.\da-zA-Z]*', 'match');
+			option = regexpi(line_options{i}, '[-+.\da-z]*', 'match');
 			if (length(option) < 2); continue; end
 			lb = val2double(option{1});
 			ub = val2double(option{2});
