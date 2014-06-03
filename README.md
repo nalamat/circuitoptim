@@ -19,6 +19,9 @@ default value. The following example optimizes resistance of R1 between 1 and
 
     R1 VCC GND [1K]  ** [1 100K dec]
 
+Remember if either of lower or upper bounds are not specified, the
+corresponding parameter won't take any part in optimization.
+
 
 ## Web and contact
 
