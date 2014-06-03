@@ -21,45 +21,27 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ lines defaults options ] = read_sp( netlist_path )
+function [ content params options ] = read_sp( netlist_path )
 	
 	f = fopen(netlist_path, 'r');
-	lines    = [];
-	options  = [];
-	defaults = [];
+	content = [];
+	params  = [];
+	options = [];
 	
 	while ( ~feof(f) )
 		line = fgetl(f);
 		
-		r1 = regexp(line, '(?<!\*.*)\[[-+.\da-zA-Z ]*\]'  , 'match');
-		r2 = regexp(line, '(?<=\*\*.*)\[[-+.\da-zA-Z ]*\]', 'match');
+		line_params  = regexp(line, '(?<!\*.*)(?<=\[)[-+.\da-zA-Z \t]*(?=\])'    , 'match');
+		line_options = regexp(line, '(?<=\*\*.*)(?<=\[)[-+.\da-zA-Z \t,;]*(?=\])', 'match');
 		
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		c = min(length(line_params), length(line_options));
 		
-		a1 = regexp( line, '^m[\w\d]+', 'match' );
-		a2 = regexp( line, '^vb', 'match' );
-		if ( ~isempty(a1) )
-			mosfet_names = [ mosfet_names a1(1) ];
-			
-			a1 = regexp( line, '[\w\d.+-]+', 'match' );
-			mosfet_l = [ mosfet_l prefix2double(a1{7}) ];
-			mosfet_w = [ mosfet_w prefix2double(a1{8}) ];
-			
-			a1 = regexprep( line, '[\w\d.+-]+\s+[\w\d.+-]+$', '%s %s');
-			lines = [ lines {a1} ];
-			
-			%fprintf('%s\tL=%e\tW=%e\n', mosfet_name, mosfet_l, mosfet_w);
-		elseif ( ~isempty(a2) )
-			a1 = regexp( line, 'dc\s+([\w\d.+-]+)', 'tokens' );
-			volt_b = prefix2double(a1{1}{1});
-			
-			a1 = regexprep( line, 'dc\s+([\w\d.+-]+)', 'dc %s' );
-			lines = [ lines {a1} ];
-		else
-			lines = [ lines {line} ];
+		for i=1:c
+			option = regexp(line_options{i}, '[-+.\da-zA-Z]*', 'match');
 		end
+		
+		content = horzcat(content, '\r\n', line);
 	end
 	
-	%lines
 	fclose(f);
 end
