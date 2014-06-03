@@ -2,7 +2,7 @@
 %                                                                       %
 % This file is a part of the CircuitOptim project:                      %
 % A circuit optimization toolbox for MATLAB based on SPICE simulations  %
-% Copyright (C) 2014, Nima Alamatsaz, All rights reserved               %
+% Copyright (C) 2014 Nima Alamatsaz, All rights reserved                %
 % Email: nnalamat@gmail.com                                             %
 % Web:   http://github.com/nalamat/circuitoptim                         %
 %                                                                       %
@@ -21,16 +21,20 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ lines mosfet_names mosfet_l mosfet_w volt_b ] = read_sp( netlist_path )
+function [ lines defaults options ] = read_sp( netlist_path )
 	
 	f = fopen(netlist_path, 'r');
-	mosfet_names = [];
-	mosfet_l = [];
-	mosfet_w = [];
-	lines = [];
+	lines    = [];
+	options  = [];
+	defaults = [];
 	
 	while ( ~feof(f) )
 		line = fgetl(f);
+		
+		r1 = regexp(line, '(?<!\*.*)\[[-+.\da-zA-Z ]*\]'  , 'match');
+		r2 = regexp(line, '(?<=\*\*.*)\[[-+.\da-zA-Z ]*\]', 'match');
+		
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
 		a1 = regexp( line, '^m[\w\d]+', 'match' );
 		a2 = regexp( line, '^vb', 'match' );
