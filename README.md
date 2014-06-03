@@ -20,13 +20,13 @@ CircuitOptim. If not, see <http://www.gnu.org/licenses/>.
 ## Netlist formatting
 
 Prepare your netlist as you would normally do, then wrap numeric parameters
-that are needed to be optimized in square brackets. At the end of the line add
-two stars (**) and for each parameter in brackets, write optimization options,
-again enclosed in brackets with the following format:
+needed to be optimized in square brackets. At the end of the line add two stars
+(**) and for each parameter in brackets, write optimization options, again
+enclosed in brackets with the following format:
 
     [lower_bound upper_bound (scale)]
 
-Lower and upper bounds can be determined in the SPICE fashion: 1e3, 1k or 1000.
+Lower and upper bounds can be determined in the SPICE fashion: 1e3, 1K or 1000.
 Scale is optional and has to be either 'lin' or 'dec' with latter being the
 default value. The following example optimizes resistance of R1 between 1 and
 100K Ohm in a decade scale:
