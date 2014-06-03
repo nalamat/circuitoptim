@@ -39,15 +39,15 @@ function [ content params options ] = read_sp( netlist_path )
 		for i=1:c
 			option = regexp(line_options{i}, '[-+.\da-zA-Z]*', 'match');
 			if (length(option) < 2); continue; end
-			lower = val2double(option{1});
-			upper = val2double(option{2});
-			if (isempty(lower) || isempty(upper)); continue; end
-			if (length(option) > 2); option{3} = ''; end
+			lb = val2double(option{1});
+			ub = val2double(option{2});
+			if (isempty(lb) || isempty(ub)); continue; end
+			if (length(option) < 3); option{3} = ''; end
 			scale = lower(option{3});
 			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
 			
 			params  = horzcat(params, val2double(line_params{i}));
-			options = horzcat(options, struct('lower',lower, 'upper',upper, 'scale',scale));
+			options = horzcat(options, struct('lb',lb, 'ub',ub, 'scale',scale));
 		end
 		
 		if (isempty(content))
