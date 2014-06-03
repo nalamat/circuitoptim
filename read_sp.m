@@ -21,6 +21,41 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ output_args ] = read_sp( input_args )
+function [ lines mosfet_names mosfet_l mosfet_w volt_b ] = read_sp( netlist_path )
 	
+	f = fopen(netlist_path, 'r');
+	mosfet_names = [];
+	mosfet_l = [];
+	mosfet_w = [];
+	lines = [];
+	
+	while ( ~feof(f) )
+		line = fgetl(f);
+		
+		a1 = regexp( line, '^m[\w\d]+', 'match' );
+		a2 = regexp( line, '^vb', 'match' );
+		if ( ~isempty(a1) )
+			mosfet_names = [ mosfet_names a1(1) ];
+			
+			a1 = regexp( line, '[\w\d.+-]+', 'match' );
+			mosfet_l = [ mosfet_l prefix2double(a1{7}) ];
+			mosfet_w = [ mosfet_w prefix2double(a1{8}) ];
+			
+			a1 = regexprep( line, '[\w\d.+-]+\s+[\w\d.+-]+$', '%s %s');
+			lines = [ lines {a1} ];
+			
+			%fprintf('%s\tL=%e\tW=%e\n', mosfet_name, mosfet_l, mosfet_w);
+		elseif ( ~isempty(a2) )
+			a1 = regexp( line, 'dc\s+([\w\d.+-]+)', 'tokens' );
+			volt_b = prefix2double(a1{1}{1});
+			
+			a1 = regexprep( line, 'dc\s+([\w\d.+-]+)', 'dc %s' );
+			lines = [ lines {a1} ];
+		else
+			lines = [ lines {line} ];
+		end
+	end
+	
+	%lines
+	fclose(f);
 end
