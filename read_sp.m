@@ -38,6 +38,17 @@ function [ content params options ] = read_sp( netlist_path )
 		
 		for i=1:c
 			option = regexp(line_options{i}, '[-+.\da-zA-Z]*', 'match');
+			if (length(option) < 2); continue; end
+			lower = val2num(option{1});
+			upper = val2num(option{2});
+			if (isempty(lower) || isempty(upper)); continue; end
+			scale = 'dec';
+			if (length(option) > 2 && strcmp(lower(option{3}), 'lin'))
+				scale = 'lin';
+			end
+			
+			params  = horzcat(params, val2num(line_params{i}));
+			options = horzcat(options, struct('lower',lower, 'upper',upper, 'scale',scale));
 		end
 		
 		content = horzcat(content, '\r\n', line);
