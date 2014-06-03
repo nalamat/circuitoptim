@@ -1,3 +1,3 @@
-function [nums] = str2num(strs)
+function [nums] = val2double(strs)
 	nums = str2double(strs);
 end
