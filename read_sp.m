@@ -31,8 +31,8 @@ function [ content params options ] = read_sp( netlist_path )
 	while ( ~feof(f) )
 		line = fgetl(f);
 		
-		line_params  = regexp(line, '(?<!\*.*)(?<=\[)[-+.\da-zA-Z \t]*(?=\])'    , 'match');
-		line_options = regexp(line, '(?<=\*\*.*)(?<=\[)[-+.\da-zA-Z \t,;]*(?=\])', 'match');
+		line_params  = regexpi(line, '(?<!\*.*)(?<=\[)[-+.\da-z \t]*(?=\])'    , 'match');
+		line_options = regexpi(line, '(?<=\*\*.*)(?<=\[)[-+.\da-z \t,;]*(?=\])', 'match');
 		
 		c = min(length(line_params), length(line_options));
 		
