@@ -7,8 +7,8 @@ A circuit optimization toolbox for MATLAB based on SPICE simulations
 
 Prepare your netlist as you would normally do, then wrap numeric parameters
 needed to be optimized in square brackets. At the end of the line add two stars
-(**) and for each parameter in brackets, write optimization options, again
-enclosed in brackets, with the following format:
+(**) and for each parameter in brackets, write optimization options again
+enclosed in brackets with the following format:
 
     [lower_bound upper_bound (scale)]
 
