@@ -21,7 +21,7 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ content params options ] = read_sp( netlist_path )
+function [ content, params, options ] = read_sp( netlist_path )
 	
 	f = fopen(netlist_path, 'r');
 	content = [];
@@ -32,7 +32,7 @@ function [ content params options ] = read_sp( netlist_path )
 	while ( ~feof(f) )
 		line = fgetl(f);
 		
-		[line_params line_split] = regexpi(line, '(?<!\*.*)(?<=\[)[-+.\da-z \t]*(?=\])', 'match', 'split');
+		[line_params, line_split] = regexpi(line, '(?<!\*.*)(?<=\[)[-+.\da-z \t]*(?=\])', 'match', 'split');
 		line_options = regexpi(line, '(?<=\*\*.*)(?<=\[)[-+.\da-z \t,;]*(?=\])', 'match');
 		
 		c = min(length(line_params), length(line_options));
