@@ -22,10 +22,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function circuitoptim(netlist_path, cost_func, output_path)
+	% Check for availability of hspice.exe
 	[status, ~] = system('cmd /C "hspice -v"');
 	if (status)
 		error('HSPICE is either not installed or not included in the path');
 	end
 	
+	% Create a temp directory for generated netlist and simulation output files
+	temp_dir = [tempdir, 'circuitoptim'];
+	[status, ~] = rmdir(temp_dir);
+	[status, ~] = mkdir(temp_dir);
+	if (~status)
+		error(['Cannot create temp directory ''', temp_dir, '''']);
+	end
+	
 	[content, params, options] = read_sp(netlist_path);
+	
+	
 end
