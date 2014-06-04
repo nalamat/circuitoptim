@@ -34,17 +34,7 @@ function [vals] = val2double(strs)
 	multis(10) = struct('symbol', 'g'  , 'value', 'e9'  );
 	multis(11) = struct('symbol', 't'  , 'value', 'e12' );
 	
-	if (iscell(strs))
-		for i=1:length(strs)
-			for j=1:length(multis)
-				strs{i} = regexprep(strs{i}, multis(j).symbol, multis(j).value, 'ignorecase');
-			end
-		end
-	else
-		for j=1:length(multis)
-			strs = regexprep(strs, multis(j).symbol, multis(j).value, 'ignorecase');
-		end
-	end
-
+	strs = regexprep(strs, {multis(:).symbol}, {multis(:).value}, 'ignorecase');
+	
 	vals = str2double(strs);
 end
