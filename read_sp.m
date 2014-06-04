@@ -42,7 +42,7 @@ function [ content params options ] = read_sp( netlist_path )
 			if (length(option) < 2); continue; end
 			lb = val2double(option{1});
 			ub = val2double(option{2});
-			if (isempty(lb) || isempty(ub)); continue; end
+			if (isnan(lb) || isnan(ub)); continue; end
 			if (length(option) < 3); option{3} = ''; end
 			scale = lower(option{3});
 			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
