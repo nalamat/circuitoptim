@@ -21,7 +21,7 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [ content, params, options ] = read_sp( netlist_path )
+function [content, params, options] = read_sp(netlist_path)
 	
 	f = fopen(netlist_path, 'r');
 	content = [];
@@ -33,7 +33,7 @@ function [ content, params, options ] = read_sp( netlist_path )
 		line = fgetl(f);
 		
 		[line_params, line_split] = regexpi(line, '(?<!\*.*)(?<=\[)[-+.\da-z \t]*(?=\])', 'match', 'split');
-		line_options = regexpi(line, '(?<=\*\*.*)(?<=\[)[-+.\da-z \t,;]*(?=\])', 'match');
+		line_options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z \t,;]*(?=\])', 'match');
 		
 		c = min(length(line_params), length(line_options));
 		
@@ -54,8 +54,8 @@ function [ content, params, options ] = read_sp( netlist_path )
 		
 		% replace valid params with a '%s' in the current line,
 		% these replacements are later used to generate altered netlists
-		if (length(line_params) < length(line_split)); line_params = [line_params {''}]; end
-		if (length(line_params) > length(line_split)); line_split  = [line_split  {''}]; end
+		if (length(line_params) < length(line_split)); line_params = [line_params, {''}]; end
+		if (length(line_params) > length(line_split)); line_split  = [line_split , {''}]; end
 		line = strjoin(reshape(vertcat(line_split, line_params), 1, length(line_split)*2), '');
 
 		lines = [lines, {line}];
