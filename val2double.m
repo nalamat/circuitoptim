@@ -22,19 +22,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [vals] = val2double(strs)
-	multis(1 ) = struct('symbol', 'meg', 'value', 'e6'  );
-	multis(2 ) = struct('symbol', 'a'  , 'value', 'e-18');
-	multis(3 ) = struct('symbol', 'f'  , 'value', 'e-15');
-	multis(4 ) = struct('symbol', 'p'  , 'value', 'e-12');
-	multis(5 ) = struct('symbol', 'n'  , 'value', 'e-9' );
-	multis(6 ) = struct('symbol', 'u'  , 'value', 'e-6' );
-	multis(7 ) = struct('symbol', 'm'  , 'value', 'e-3' );
-	multis(8 ) = struct('symbol', 'k'  , 'value', 'e3'  );
-	multis(9 ) = struct('symbol', 'x'  , 'value', 'e6'  );
-	multis(10) = struct('symbol', 'g'  , 'value', 'e9'  );
-	multis(11) = struct('symbol', 't'  , 'value', 'e12' );
+	multis = {
+		'meg' 'e6'  ;
+		'a'   'e-18';
+		'f'   'e-15';
+		'p'   'e-12';
+		'n'   'e-9' ;
+		'u'   'e-6' ;
+		'm'   'e-3' ;
+		'k'   'e3'  ;
+		'x'   'e6'  ;
+		'g'   'e9'  ;
+		't'   'e12' };
 	
-	strs = regexprep(strs, {multis(:).symbol}, {multis(:).value}, 'ignorecase');
+	strs = regexprep(strs, multis(:,1), multis(:,2), 'ignorecase');
 	
 	vals = str2double(strs);
 end
