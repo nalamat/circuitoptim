@@ -31,7 +31,7 @@ function [ content params options ] = read_sp( netlist_path )
 	while ( ~feof(f) )
 		line = fgetl(f);
 		
-		line_params  = regexpi(line, '(?<!\*.*)(?<=\[)[-+.\da-z \t]*(?=\])'    , 'match');
+		[line_params line_split] = regexpi(line, '(?<!\*.*)(?<=\[)[-+.\da-z \t]*(?=\])', 'match', 'split');
 		line_options = regexpi(line, '(?<=\*\*.*)(?<=\[)[-+.\da-z \t,;]*(?=\])', 'match');
 		
 		c = min(length(line_params), length(line_options));
@@ -48,8 +48,15 @@ function [ content params options ] = read_sp( netlist_path )
 			
 			params  = [params , val2double(line_params{i})];
 			options = [options, struct('lb',lb, 'ub',ub, 'scale',scale)];
+			line_params{i} = '%s';
 		end
 		
+		% replace valid params with a '%s' in the current line,
+		% these replacements are later used to generate altered netlists
+		if (length(line_params) < length(line_split)); line_params = [line_params {''}]; end
+		if (length(line_params) > length(line_split)); line_split  = [line_split  {''}]; end
+		line = strjoin(reshape(vertcat(line_split, line_params), 1, length(line_split)*2), '');
+
 		if (isempty(content))
 			content = line;
 		else
