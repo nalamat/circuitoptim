@@ -46,14 +46,14 @@ function [ content params options ] = read_sp( netlist_path )
 			scale = lower(option{3});
 			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
 			
-			params  = horzcat(params, val2double(line_params{i}));
-			options = horzcat(options, struct('lb',lb, 'ub',ub, 'scale',scale));
+			params  = [params , val2double(line_params{i})];
+			options = [options, struct('lb',lb, 'ub',ub, 'scale',scale)];
 		end
 		
 		if (isempty(content))
 			content = line;
 		else
-			content = horzcat(content, '\r\n', line);
+			content = [content, '\r\n', line];
 		end
 	end
 	
