@@ -25,6 +25,7 @@ function [ content params options ] = read_sp( netlist_path )
 	
 	f = fopen(netlist_path, 'r');
 	content = [];
+	lines   = [];
 	params  = [];
 	options = [];
 	
@@ -57,12 +58,10 @@ function [ content params options ] = read_sp( netlist_path )
 		if (length(line_params) > length(line_split)); line_split  = [line_split  {''}]; end
 		line = strjoin(reshape(vertcat(line_split, line_params), 1, length(line_split)*2), '');
 
-		if (isempty(content))
-			content = line;
-		else
-			content = [content, '\r\n', line];
-		end
+		lines = [lines, {line}];
 	end
+	
+	content = strjoin(lines, '\n');
 	
 	fclose(f);
 end
