@@ -2,7 +2,7 @@
 %                                                                       %
 % This file is a part of the CircuitOptim project:                      %
 % A circuit optimization toolbox for MATLAB based on SPICE simulations  %
-% Copyright (C) 2014, Nima Alamatsaz, All rights reserved               %
+% Copyright (C) 2014 Nima Alamatsaz, All rights reserved                %
 % Email: nnalamat@gmail.com                                             %
 % Web:   http://github.com/nalamat/circuitoptim                         %
 %                                                                       %
@@ -21,6 +21,11 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function circuitoptim(netlist_path, cost_func)
+function circuitoptim(netlist_path, cost_func, output_path)
+	[status, ~] = system('cmd /C "hspice -v"');
+	if (status)
+		error('HSPICE is either not installed or not included in the path');
+	end
 	
+	[content, params, options] = read_sp(netlist_path);
 end
