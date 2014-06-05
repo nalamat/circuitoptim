@@ -22,20 +22,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [vals] = spice2double(strs)
-	multis = {
-		'meg' 'e6'  ;
-		'a'   'e-18';
-		'f'   'e-15';
-		'p'   'e-12';
-		'n'   'e-9' ;
-		'u'   'e-6' ;
-		'm'   'e-3' ;
-		'k'   'e3'  ;
-		'x'   'e6'  ;
-		'g'   'e9'  ;
-		't'   'e12' };
+	exps = {
+		'\s'                        ''    ;    % Ignore whitespaces
+		'(?<=[-+.\d]+)a(?!mps).*'   'e-18';    % Atto
+		'(?<=[-+.\d]+)f.*'          'e-15';    % Femto
+		'(?<=[-+.\d]+)p.*'          'e-12';    % Pico
+		'(?<=[-+.\d]+)n.*'          'e-9' ;    % Nano
+		'(?<=[-+.\d]+)u.*'          'e-6' ;    % Micro
+		'(?<=[-+.\d]+)m(?!eg).*'    'e-3' ;    % Milli
+		'(?<=[-+.\d]+)k.*'          'e3'  ;    % Kilo
+		'(?<=[-+.\d]+)(x|meg).*'    'e6'  ;    % Mega
+		'(?<=[-+.\d]+)g.*'          'e9'  ;    % Giga
+		'(?<=[-+.\d]+)t.*'          'e12' ;    % Tera
+		'(?<=[-+.\d]+)[^-+.\d]*$'   ''    };   % Ignore engineering units
 	
-	strs = regexprep(strs, multis(:,1), multis(:,2), 'ignorecase');
+	strs = regexprep(strs, exps(:,1), exps(:,2), 'ignorecase');
 	
 	vals = str2double(strs);
 end
