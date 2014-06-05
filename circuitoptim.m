@@ -22,7 +22,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function circuitoptim(netlist_path, cost_func, output_path)
-	% Check for availability of hspice and open it in client/server mode
+	% Check for availability of HSPICE and open it in client/server mode
 	[res, ~  ] = system('cmd /C hspice -C');
 	cleanup1   = onCleanup(@()cleanup_hspice());
 	assert(res==0, 'HSPICE is either not installed or not included in the path');
@@ -41,8 +41,17 @@ function circuitoptim(netlist_path, cost_func, output_path)
 	assert(res==1, 'Cannot read the netlist file');
 	[res, out] = system(sprintf('cmd /C hspice -i "%s" -o "%s"', temp_sp, temp_file));
 	assert(res==0 && ~isempty(strfind(out, 'concluded')), 'Cannot simulate the netlist file');
-
+	
+	% Read the netlist
 	[content, params, options] = read_sp(netlist_path);
+	
+	% Start optimization using Genetic Algorithm
+	gaopts = gaoptimset('InitialPopulation', params);
+	ga(@cost, length(params), [], [], [], [], [options(:).lb], [options(:).ub], [], gaopts);
+	
+	function cost = cost(params)
+		cost = 0;
+	end
 end
 
 function cleanup_hspice()
