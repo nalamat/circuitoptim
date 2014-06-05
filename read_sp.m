@@ -33,7 +33,7 @@ function [content, params, options] = read_sp(netlist_path)
 		line = fgetl(f);
 		
 		[line_params, line_split] = regexpi(line, '(?<!\*.*)(?<=\[)\s*[-+.\da-z]+\s*(?=\])', 'match', 'split');
-		line_options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z \t,;]*(?=\])', 'match');
+		line_options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z\s,;]+(?=\])', 'match');
 		
 		c = min(length(line_params), length(line_options));
 		
