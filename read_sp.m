@@ -40,14 +40,14 @@ function [content, params, options] = read_sp(netlist_path)
 		for i=1:c
 			option = regexpi(line_options{i}, '[-+.\da-z]*', 'match');
 			if (length(option) < 2); continue; end
-			lb = val2double(option{1});
-			ub = val2double(option{2});
+			lb = spice2double(option{1});
+			ub = spice2double(option{2});
 			if (isnan(lb) || isnan(ub)); continue; end
 			if (length(option) < 3); option{3} = ''; end
 			scale = lower(option{3});
 			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
 			
-			params  = [params , val2double(line_params{i})];
+			params  = [params , spice2double(line_params{i})];
 			options = [options, struct('lb',lb, 'ub',ub, 'scale',scale)];
 			line_params{i} = '%s';
 		end
