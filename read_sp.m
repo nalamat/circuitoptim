@@ -23,14 +23,15 @@
 
 function [content, params, options] = read_sp(netlist_path)
 	
-	f = fopen(netlist_path, 'r');
-	content = [];
-	lines   = [];
-	params  = [];
-	options = [];
+	file     = fopen(netlist_path, 'r');
+	cleanup1 = onCleanup(@()fclose(file));
+	content  = [];
+	lines    = [];
+	params   = [];
+	options  = [];
 	
-	while ( ~feof(f) )
-		line = fgetl(f);
+	while ( ~feof(file) )
+		line = fgetl(file);
 		
 		[line_params, line_split] = regexpi(line, '(?<!\*.*)(?<=\[)\s*[-+.\da-z]+\s*(?=\])', 'match', 'split');
 		line_options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z\s,;]+(?=\])', 'match');
@@ -66,5 +67,4 @@ function [content, params, options] = read_sp(netlist_path)
 	
 	content = strjoin(lines, '\n');
 	
-	fclose(f);
 end
