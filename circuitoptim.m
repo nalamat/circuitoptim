@@ -44,10 +44,11 @@ function circuitoptim(netlist_path, cost_func, output_path)
 	
 	% Read the netlist
 	[content, params, options] = read_sp(netlist_path);
+	paramcount = length(params);
 	
 	% Start optimization using Genetic Algorithm
-	gaopts = gaoptimset('InitialPopulation', params);
-	ga(@cost, length(params), [], [], [], [], [options(:).lb], [options(:).ub], [], gaopts);
+	%gaopts = gaoptimset('InitialPopulation', params);
+	ga(@cost, paramcount, [], [], [], [], [options(:).lb], [options(:).ub]);
 	
 	function cost = cost(params)
 		cost = 0;
