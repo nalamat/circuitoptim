@@ -22,23 +22,33 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function circuitoptim(netlist_path, cost_func, output_path)
-	% Check for availability of hspice
-	[res, ~] = system('cmd /C "hspice -v"');
+	% Check for availability of hspice and open it in client/server mode
+	[res, ~  ] = system('cmd /C hspice -C');
+	cleanup1   = onCleanup(@()cleanup_hspice());
 	assert(res==0, 'HSPICE is either not installed or not included in the path');
-	
+
 	% Create a temp directory for generated netlist and simulation output files
-	temp_dir  = [tempdir  , 'circuitoptim'];
-	temp_file = [temp_dir , '\circuit'];
-	temp_sp   = [temp_file, '.sp'];
-	[~  , ~]  = rmdir(temp_dir, 's');
-	[res, ~]  = mkdir(temp_dir);
+	temp_dir   = [tempdir  , 'circuitoptim'];
+	temp_file  = [temp_dir , '\circuit'    ];
+	temp_sp    = [temp_file, '.sp'         ];
+	[~  , ~  ] = rmdir(temp_dir, 's');
+	[res, ~  ] = mkdir(temp_dir);
+	cleanup2   = onCleanup(@()cleanup_dir(temp_dir));
 	assert(res==1, 'Cannot create temp directory');
 	
 	% Validate the given netlist by simulating it
-	[res, ~] = copyfile(netlist_path, temp_sp, 'f');
+	[res, ~  ] = copyfile(netlist_path, temp_sp, 'f');
 	assert(res==1, 'Cannot read the netlist file');
 	[res, out] = system(sprintf('cmd /C hspice -i "%s" -o "%s"', temp_sp, temp_file));
 	assert(res==0 && ~isempty(strfind(out, 'concluded')), 'Cannot simulate the netlist file');
-	
+
 	[content, params, options] = read_sp(netlist_path);
+end
+
+function cleanup_hspice()
+	[~  , ~  ] = system('cmd /C hspice -C -K');
+end
+
+function cleanup_dir(temp_dir)
+	[~  , ~  ] = rmdir(temp_dir, 's');
 end
