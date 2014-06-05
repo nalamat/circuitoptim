@@ -49,10 +49,13 @@ function [content, params, options] = read_sp(netlist_path)
 			
 			params  = [params , spice2double(line_params{i})];
 			options = [options, struct('lb',lb, 'ub',ub, 'scale',scale)];
-			line_params{i} = '%s';
+			line_params{i} = '%.12e';
 		end
 		
-		% replace valid params with a '%s' in the current line,
+		% Escape % symbols in the current line
+		line = regexprep(line, '%', '%%');
+		
+		% Replace valid params with a '%s' in the current line,
 		% these replacements are later used to generate altered netlists
 		if (length(line_params) < length(line_split)); line_params = [line_params, {''}]; end
 		if (length(line_params) > length(line_split)); line_split  = [line_split , {''}]; end
