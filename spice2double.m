@@ -21,7 +21,7 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [vals] = val2double(strs)
+function [vals] = spice2double(strs)
 	multis = {
 		'meg' 'e6'  ;
 		'a'   'e-18';
