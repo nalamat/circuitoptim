@@ -42,7 +42,7 @@ function [content, params] = read_sp(netlist_path)
 		
 		for i=1:c
 			value = spice2double(values{i});
-			if (isnan(value); continue; end;
+			if (isnan(value)); continue; end;
 			option = regexpi(options{i}, '[-+.\da-z]*', 'match');
 			if (length(option) < 2); continue; end
 			lbound = spice2double(option{1});
@@ -61,8 +61,9 @@ function [content, params] = read_sp(netlist_path)
 		% these replacements are later used to generate altered netlists
 		if (length(values) < length(split)); values = [values, {''}]; end
 		if (length(values) > length(split)); split  = [split , {''}]; end
+		
 		line = strjoin(reshape(vertcat(split, values), 1, length(split)*2), '');
-
+		
 		lines = [lines, {line}];
 	end
 	
