@@ -32,6 +32,9 @@ function [content, params] = read_sp(netlist_path)
 	while ( ~feof(file) )
 		line = fgetl(file);
 		
+		% Escape % symbols in the current line
+		line = regexprep(line, '%', '%%');
+		
 		[values, split] = regexpi(line, '(?<!\*.*)(?<=\[)\s*[-+.\da-z]+\s*(?=\])', 'match', 'split');
 		options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z\s,;]+(?=\])', 'match');
 		
@@ -53,9 +56,6 @@ function [content, params] = read_sp(netlist_path)
 			params = [params, param];
 			values{i} = '%.12e';
 		end
-		
-		% Escape % symbols in the current line
-		line = regexprep(line, '%', '%%');
 		
 		% Replace valid params with a '%s' in the current line,
 		% these replacements are later used to generate altered netlists
