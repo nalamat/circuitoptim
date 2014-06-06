@@ -21,36 +21,37 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [content, params, options] = read_sp(netlist_path)
+function [content, params] = read_sp(netlist_path)
 	
 	file     = fopen(netlist_path, 'r');
 	cleanup1 = onCleanup(@()fclose(file));
 	content  = [];
 	lines    = [];
 	params   = [];
-	options  = [];
 	
 	while ( ~feof(file) )
 		line = fgetl(file);
 		
-		[line_params, line_split] = regexpi(line, '(?<!\*.*)(?<=\[)\s*[-+.\da-z]+\s*(?=\])', 'match', 'split');
-		line_options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z\s,;]+(?=\])', 'match');
+		[values, split] = regexpi(line, '(?<!\*.*)(?<=\[)\s*[-+.\da-z]+\s*(?=\])', 'match', 'split');
+		options = regexpi(line, '(?<=[^\*]\*{2}[^\*].*)(?<=\[)[-+.\da-z\s,;]+(?=\])', 'match');
 		
-		c = min(length(line_params), length(line_options));
+		c = min(length(values), length(options));
 		
 		for i=1:c
-			option = regexpi(line_options{i}, '[-+.\da-z]*', 'match');
+			value = spice2double(values{i});
+			if (isnan(value); continue; end;
+			option = regexpi(options{i}, '[-+.\da-z]*', 'match');
 			if (length(option) < 2); continue; end
-			lb = spice2double(option{1});
-			ub = spice2double(option{2});
-			if (isnan(lb) || isnan(ub)); continue; end
+			lbound = spice2double(option{1});
+			ubound = spice2double(option{2});
+			if (isnan(lbound) || isnan(ubound)); continue; end
 			if (length(option) < 3); option{3} = ''; end
 			scale = lower(option{3});
 			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
 			
-			params  = [params , spice2double(line_params{i})];
-			options = [options, struct('lb',lb, 'ub',ub, 'scale',scale)];
-			line_params{i} = '%.12e';
+			param = struct('value',value, 'lbound',lbound, 'ubound',ubound, 'scale',scale);
+			params = [params, param];
+			values{i} = '%.12e';
 		end
 		
 		% Escape % symbols in the current line
@@ -58,9 +59,9 @@ function [content, params, options] = read_sp(netlist_path)
 		
 		% Replace valid params with a '%s' in the current line,
 		% these replacements are later used to generate altered netlists
-		if (length(line_params) < length(line_split)); line_params = [line_params, {''}]; end
-		if (length(line_params) > length(line_split)); line_split  = [line_split , {''}]; end
-		line = strjoin(reshape(vertcat(line_split, line_params), 1, length(line_split)*2), '');
+		if (length(values) < length(split)); values = [values, {''}]; end
+		if (length(values) > length(split)); split  = [split , {''}]; end
+		line = strjoin(reshape(vertcat(split, values), 1, length(split)*2), '');
 
 		lines = [lines, {line}];
 	end
