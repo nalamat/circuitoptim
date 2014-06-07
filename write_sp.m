@@ -21,11 +21,12 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function write_sp(netlist_path, content, params)
+function write_sp(netlist_path, content, values)
 	
 	file     = fopen(netlist_path, 'w+');
 	cleanup1 = onCleanup(@()fclose(file));
 	assert(file>-1, 'Cannot open output netlist file for writing');
 	
-	fprintf(file, content, params);
+	fprintf(file, content, values);
+	
 end
