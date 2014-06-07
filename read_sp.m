@@ -48,11 +48,10 @@ function [content, params] = read_sp(netlist_path)
 			lbound = spice2double(option{1});
 			ubound = spice2double(option{2});
 			if (isnan(lbound) || isnan(ubound)); continue; end
-			if (length(option) < 3); option{3} = ''; end
-			scale = lower(option{3});
-			if (strcmp(scale, 'lin') == 0); scale = 'dec'; end
+			dec = 1;
+			if (length(option) > 2 && strcmpi(option{3},'lin')); dec = 0; end
 			
-			param = struct('value',value, 'lbound',lbound, 'ubound',ubound, 'scale',scale);
+			param = struct('value',value, 'lbound',lbound, 'ubound',ubound, 'dec',dec);
 			params = [params, param];
 			values{i} = '%.12e';
 		end
