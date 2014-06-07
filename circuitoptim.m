@@ -43,14 +43,26 @@ function circuitoptim(netlist_path, cost_func, output_path)
 	assert(res==0 && ~isempty(strfind(out, 'concluded')), 'Cannot simulate the netlist file');
 	
 	% Read the netlist
-	[content, params, options] = read_sp(netlist_path);
+	[content, params] = read_sp(netlist_path);
 	paramcount = length(params);
 	
 	% Start optimization using Genetic Algorithm
 	%gaopts = gaoptimset('InitialPopulation', params);
-	ga(@cost, paramcount, [], [], [], [], [options(:).lb], [options(:).ub]);
+	ga(@cost, paramcount, [], [], [], [], [params(:).lbound], [params(:).ubound]);
 	
-	function cost = cost(params)
+	function cost = cost(values)
+		% Convert the scale of selected values
+		values([params(:).dec]) = lin2dec(values([params(:).dec]));
+		
+		% Generate a new netlist by substituting test values
+		write_sp(temp_sp, content, values);
+		
+		% Simulate the generated netlist
+		[res, out] = system(sprintf('cmd /C hspice -i "%s" -o "%s"', temp_sp, temp_file));
+		assert(res==0 && ~isempty(strfind(out, 'concluded')), 'Cannot simulate the netlist file');
+		
+		
+		
 		cost = 0;
 	end
 end
