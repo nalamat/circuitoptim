@@ -21,6 +21,6 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [data] = read_out(output_path)
+function [data] = read_sim(output_path)
 	
 end
