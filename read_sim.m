@@ -21,6 +21,9 @@
 %                                                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [data] = read_sim(output_path)
+function [data] = read_sim(sim_path)
+	
+	file     = fopen(sim_path, 'r');
+	cleanup1 = onCleanup(@()fclose(file));
 	
 end
