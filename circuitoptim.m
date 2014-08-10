@@ -3,7 +3,7 @@
 % This file is a part of the CircuitOptim project:                      %
 % A circuit optimization toolbox for MATLAB based on SPICE simulations  %
 % Copyright (C) 2014 Nima Alamatsaz, All rights reserved                %
-% Email: nnalamat@gmail.com                                             %
+% Email: nialamat@gmail.com                                             %
 % Web:   http://github.com/nalamat/circuitoptim                         %
 %                                                                       %
 % CircuitOptim is free software: you can redistribute it and/or modify  %
